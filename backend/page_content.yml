@@ -1,0 +1,11 @@
+#This file contains the configuration for the page content of the website.
+# It is structured in a way that allows for easy modification and extension.
+- main:
+    title: Hello, World!
+    description:  This is a sample description
+    background_image_folder: images/main_page/ #to be changed to a folder outside codebase
+- products:
+    title: Products
+    description:  This is the products page
+    background_image_folder: images/products/
+    items_database: sample_database
