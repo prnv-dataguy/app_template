@@ -27,10 +27,14 @@ def load_page_content():
         with open("page_content.yml", "r") as file:
             config = yaml.safe_load(file)
             # config is a list of dicts, find the one with 'main' key
-            for item in config:
-                if "main" in item:
-                    return item["main"]
-            logger.error("'main' section not found in page_content.yml.")
+            if isinstance(config, dict) and "main" in config:
+                return config["main"]
+            elif isinstance(config, list):
+                for item in config:
+                    if "main" in item:
+                        return item["main"]
+            logger.error("Could not find 'main' section in page_content.yml.")
+
             return {}
     except FileNotFoundError:
         logger.error("page_content.yml not found.")
@@ -61,10 +65,10 @@ async def lifespan(app: FastAPI):
 
 
 # This is the main entry point for the FastAPI application.
-api = FastAPI(lifespan=lifespan)
+app = FastAPI(lifespan=lifespan)
 
 
-@api.get("/")
+@app.get("/")
 async def read_root():
     """
     Root endpoint that returns a welcome message and page content.
