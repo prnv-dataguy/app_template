@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 import yaml
 import logging
+from contextlib import asynccontextmanager
 
 
 # Set up the root logger
@@ -44,13 +45,27 @@ content = load_page_content()
 # Display loaded content for debugging
 logger.info("Loaded page content: %s", content)
 
+
+# Add an async context manager for lifecycle management for the FastAPI app
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """
+    Lifespan context manager for FastAPI application.
+    This can be used for startup and shutdown events.
+    """
+    logger.info("Starting up the FastAPI application...")
+    global content
+    content = load_page_content()
+    logger.info("Page content loaded for FastAPI application: %s", content)
+    yield  # This allows the application to run
+
+
 # This is the main entry point for the FastAPI application.
-api = FastAPI()
-logger.info("Initializing the FastAPI application...")
+api = FastAPI(lifespan=lifespan)
 
 
 @api.get("/")
-def read_root(content: dict = content):
+async def read_root():
     """
     Root endpoint that returns a welcome message and page content.
     """
