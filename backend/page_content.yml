@@ -2,7 +2,7 @@
 # It is structured in a way that allows for easy modification and extension.
 - main:
     title: Hello, World!
-    description:  This is a sample description
+    description:  This is a sample description i changed it back.
     background_image_folder: images/main_page/ #to be changed to a folder outside codebase
 - products:
     title: Products
