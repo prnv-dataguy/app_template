@@ -1,17 +1,24 @@
 # Use the official Python image from Docker Hub
 FROM python:3.12-slim
 
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+
 # Set the working directory in the container
 WORKDIR /app
 
-# Copy requirements.txt if you have dependencies
+# Copy the requirements file into the container
 COPY requirements.txt .
 
 # Install dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the rest of your application code
+# Copy rest of the code into the container
 COPY . .
 
-# Set the default command to run your app (replace app.py with your entry point)
-CMD ["python", "app.py"]
+# Expose the port Uvicorn will run on
+EXPOSE 8000
+
+# Command to run the app
+CMD ["uvicorn", "main:app", "--reload", "--reload-include", "page_content.yml", "--host", "0.0.0.0", "--port", "8000"]
